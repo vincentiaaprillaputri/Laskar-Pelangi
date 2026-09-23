@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laskar Pelangi - Pre-Lesson Reading Task</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  /* ===== LOGIN PAGE ===== */
+  #loginPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .login-card {
+    background: #fff;
+    max-width: 450px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  .login-header {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 35px 30px;
+    text-align: center;
+  }
+
+  .login-header h1 { font-size: 26px; margin-bottom: 8px; }
+  .login-header p { font-size: 14px; opacity: 0.95; }
+
+  .login-body { padding: 30px; }
+
+  .login-body .form-group { margin-bottom: 20px; }
+
+  .login-body label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #495057;
+    font-size: 14px;
+  }
+
+  .login-body input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+  }
+
+  .login-body input:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+
+  .btn-start {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+
+  .btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+  }
+
+  .error-msg {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 12px;
+    text-align: center;
+    font-weight: 600;
+    display: none;
+  }
+
+  .error-msg.show { display: block; }
+
+  /* ===== QUIZ PAGE ===== */
+  #quizPage { display: none; }
+
+  .header {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 25px 30px;
+    text-align: center;
+  }
+
+  .header h1 { font-size: 26px; margin-bottom: 6px; }
+  .header p { font-size: 14px; opacity: 0.95; }
+
+  .student-badge {
+    background: #f8f9fa;
+    padding: 15px 30px;
+    border-bottom: 2px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .student-badge span { color: #495057; }
+  .student-badge strong { color: #667eea; }
+
+  .questions { padding: 30px; }
+
+  .question {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+  }
+
+  .question.correct { border-left-color: #28a745; background: #d4edda; }
+  .question.incorrect { border-left-color: #dc3545; background: #f8d7da; }
+
+  .question-text {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #212529;
+    line-height: 1.5;
+  }
+
+  .option {
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    background: #fff;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+  }
+
+  .option:hover { border-color: #667eea; background: #f0f4ff; }
+  .option input { margin-right: 10px; cursor: pointer; }
+  .option.selected { border-color: #667eea; background: #e7ecff; }
+  .option.correct-answer { border-color: #28a745; background: #d4edda; font-weight: 600; }
+  .option.wrong-answer { border-color: #dc3545; background: #f8d7da; }
+
+  .answer-feedback {
+    margin-top: 12px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+
+  .answer-feedback.show { display: block; }
+  .answer-feedback.correct { background: #d4edda; color: #155724; }
+  .answer-feedback.incorrect { background: #f8d7da; color: #721c24; }
+
+  .buttons {
+    padding: 20px 30px 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  button {
+    padding: 14px 35px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5); }
+
+  .btn-download {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    flex: 1;
+    min-width: 200px;
+    display: none;
+  }
+
+  .btn-download.show { display: block; }
+  .btn-download:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(40, 167, 69, 0.5); }
+
+  .btn-reset {
+    background: #6c757d;
+    color: white;
+    flex: 1;
+    min-width: 200px;
+    display: none;
+  }
+
+  .btn-reset.show { display: block; }
+  .btn-reset:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(108, 117, 125, 0.5); }
+
+  .score-display {
+    text-align: center;
+    padding: 20px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #495057;
+    display: none;
+  }
+
+  .score-display.show { display: block; }
+  .score-display .score-number { color: #667eea; font-size: 32px; }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    color: #6c757d;
+    font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 20px; }
+    .question { padding: 15px; }
+    button { padding: 12px 20px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN PAGE ================= -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>🌈 Laskar Pelangi</h1>
+      <p>Pre-Lesson Reading Task</p>
+    </div>
+    <div class="login-body">
+      <div class="form-group">
+        <label for="studentName">Full Name</label>
+        <input type="text" id="studentName" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label for="studentID">Student ID</label>
+        <input type="text" id="studentID" placeholder="Enter your student ID">
+      </div>
+      <button class="btn-start" id="startBtn">Start the Task →</button>
+      <div class="error-msg" id="errorMsg">Please fill in both your Full Name and Student ID.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= QUIZ PAGE ================= -->
+<div id="quizPage">
+  <div class="container">
+    <div class="header">
+      <h1>🌈 Laskar Pelangi</h1>
+      <p>Pre-Lesson Reading Task | 40 Multiple Choice Questions</p>
+    </div>
+
+    <div class="student-badge">
+      <span>👤 Name: <strong id="displayName">—</strong></span>
+      <span>🆔 ID: <strong id="displayID">—</strong></span>
+    </div>
+
+    <div class="questions" id="questionsContainer"></div>
+
+    <div class="score-display" id="scoreDisplay">
+      Your Score: <span class="score-number" id="scoreNumber">0</span> / 40
+    </div>
+
+    <div class="buttons">
+      <button class="btn-submit" id="submitBtn">✅ Submit Answers</button>
+      <button class="btn-download" id="downloadBtn">📥 Download Results</button>
+      <button class="btn-reset" id="resetBtn">🔄 Try Again</button>
+    </div>
+
+    <div class="footer">
+      Based on the novel <em>Laskar Pelangi</em> by Andrea Hirata
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// QUIZ DATA - 40 QUESTIONS
+// ============================================================
+var quizData = [
+  { question: "What is the name of the school where the story takes place?", options: ["SD PN Timah", "SD Muhammadiyah", "SMP Nasional", "SD Negeri 1 Belitong"], answer: 1 },
+  { question: "Who is the young teacher at SD Muhammadiyah?", options: ["Bu Frischa", "Bu Mus", "Bu Siti", "Bu Ratna"], answer: 1 },
+  { question: "Why did Bu Mus and Pak Harfan look so worried on the first day of school?", options: ["They were afraid of the students", "They needed at least 10 students or the school would close", "They had no books to teach with", "They were waiting for the school inspector"], answer: 1 },
+  { question: "When did Harun arrive at the school?", options: ["At the beginning of the day", "Just before eleven o'clock when everyone had given up hope", "After lunch", "The next day"], answer: 1 },
+  { question: "Where does Lintang live?", options: ["In the city center", "In a coastal village far from the school", "Near the school", "In Gedong"], answer: 1 },
+  { question: "How did Lintang travel to school every day?", options: ["By bus", "By bicycle for 80 kilometers", "By boat", "Walking"], answer: 1 },
+  { question: "Who is the genius student in the class?", options: ["Mahar", "Lintang", "Kucai", "Syahdan"], answer: 1 },
+  { question: "What did Lintang do when a crocodile blocked his path to school?", options: ["He went home", "He waited until the crocodile left", "He threw stones at it", "He called for help"], answer: 1 },
+  { question: "Who saved Lintang from the crocodile?", options: ["His father", "Darsam", "Bodenga", "Pak Harfan"], answer: 2 },
+  { question: "Why was Bodenga feared by the villagers?", options: ["He was a criminal", "He was a wild man who lived alone and was said to have magical powers with crocodiles", "He was very rich", "He was a police officer"], answer: 1 },
+  { question: "Who is the artist in the group?", options: ["Lintang", "Mahar", "Kucai", "Syahdan"], answer: 1 },
+  { question: "How did Mahar's imagination affect the carnival performance?", options: ["He copied the PN school's ideas", "He created an original African Masai warrior dance that shocked everyone", "He refused to participate", "He asked the teachers to do it"], answer: 1 },
+  { question: "Why did Mahar put aren fruit necklaces on the dancers?", options: ["To make them look beautiful", "As a prank to make them itch and dance wildly", "Because it was part of African tradition", "Because the fruit was lucky"], answer: 1 },
+  { question: "What happened when the dancers wore the aren fruit necklaces?", options: ["They became very itchy and danced wildly", "They felt sleepy", "They became very happy", "Nothing happened"], answer: 0 },
+  { question: "How did the itching actually help the performance?", options: ["It made the dancers laugh", "It made them move wildly and energetically, which the audience thought was a powerful dance", "It made them run away", "It made the judges feel sorry for them"], answer: 1 },
+  { question: "Why did the Muhammadiyah school win the carnival despite having no money?", options: ["They bribed the judges", "They had creative ideas and performed with total energy", "The other schools did not show up", "The judges felt sorry for them"], answer: 1 },
+  { question: "Who is the only girl in the class at the beginning?", options: ["Flo", "Sahara", "A Ling", "Nuraini"], answer: 1 },
+  { question: "What does Sahara want to be when she grows up?", options: ["A teacher", "A fighter for women's rights", "A doctor", "A singer"], answer: 1 },
+  { question: "Who is A Kiong?", options: ["A Chinese boy who is very kind", "A Malay boy who is very smart", "A rich boy from the city", "A teacher at the school"], answer: 0 },
+  { question: "Who does A Kiong marry later in the story?", options: ["Flo", "Sahara", "A Ling", "Nuraini"], answer: 1 },
+  { question: "Who is the boy who is mentally slow but very kind?", options: ["Lintang", "Harun", "Trapani", "Kucai"], answer: 1 },
+  { question: "What is special about Trapani?", options: ["He is very smart", "He is very handsome", "He is very rich", "He is very tall"], answer: 1 },
+  { question: "What happens to Trapani later in the story?", options: ["He becomes a teacher", "He goes to the city", "He stays with his mother and has a mental breakdown", "He becomes a doctor"], answer: 2 },
+  { question: "Who is the first love of Ikal (the narrator)?", options: ["Flo", "Sahara", "A Ling", "Nuraini"], answer: 2 },
+  { question: "Where does Ikal meet A Ling?", options: ["At school", "At the market", "At the Sinar Harapan shop", "At the mosque"], answer: 2 },
+  { question: "What does Ikal always buy at the shop?", options: ["Sugar", "Chalk", "Books", "Coffee"], answer: 1 },
+  { question: "How did Ikal and A Ling communicate before they met face to face?", options: ["Through letters only", "Through small notes and messages in the chalk box", "Through a friend", "Through phone calls"], answer: 1 },
+  { question: "Why did A Ling leave for Jakarta?", options: ["She wanted to study there", "She had to accompany her aunt who lived alone", "Her father sent her away", "She was expelled from school"], answer: 1 },
+  { question: "What did A Ling give Ikal as a goodbye present?", options: ["A ring", "A book called 'Seandainya Mereka Bisa Bicara'", "A necklace", "A letter"], answer: 1 },
+  { question: "How did Ikal recover from his heartbreak over A Ling?", options: ["He forgot about her immediately", "He read the book she gave him and found comfort in the imaginary village of Edensor", "He found a new girlfriend", "He stopped going to school"], answer: 1 },
+  { question: "Why was Lintang forced to leave school?", options: ["He was expelled", "His father died and he had to support his family", "He moved to another city", "He lost interest in studying"], answer: 1 },
+  { question: "How did Lintang's classmates react when he said goodbye?", options: ["They were happy for him", "They cried and were very sad", "They did not care", "They were angry at him"], answer: 1 },
+  { question: "Why is Lintang's story considered a tragedy?", options: ["He was not smart enough", "He was a genius but poverty forced him to stop his education", "He did not like school", "He had no friends"], answer: 1 },
+  { question: "Why did Flo leave the rich PN school to join the poor Muhammadiyah school?", options: ["She was expelled", "She wanted to be with Mahar and be part of the unique Laskar Pelangi group", "Her parents forced her", "The PN school was too far"], answer: 1 },
+  { question: "How did Flo change by the end of the story?", options: ["She became even more rebellious", "She became a proper woman, wore a hijab, became a teacher and had children", "She left the country", "She became a famous athlete"], answer: 1 },
+  { question: "Why did Mahar and Flo go to see Tuk Bayan Tula?", options: ["They wanted to become shamans", "They wanted a magical solution to pass their exams without studying", "They were curious about the island", "They wanted to write a book about him"], answer: 1 },
+  { question: "What message did Tuk Bayan Tula give to Mahar and Flo?", options: ["You will fail", "Open your books and study", "Never go to school again", "The spirits will help you"], answer: 1 },
+  { question: "Why was the message 'Open your books and study' important for Mahar and Flo?", options: ["It showed them that there are no shortcuts and they must work hard", "It made them angry", "It made them give up", "It was what they expected"], answer: 0 },
+  { question: "Why did the Muhammadiyah school finally close in 1991?", options: ["The government closed it", "There were not enough students and no money", "The teachers retired", "It moved to a new location"], answer: 1 },
+  { question: "How did Ikal finally escape his life as a postal worker?", options: ["He became a manager", "He studied hard and won a scholarship to continue his education", "He quit and became a fisherman", "He moved to another city"], answer: 1 }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+var submitted = false;
+var userAnswers = new Array(quizData.length).fill(null);
+var studentName = "";
+var studentID = "";
+var finalScore = 0;
+
+// ============================================================
+// START BUTTON - Validate name and ID
+// ============================================================
+document.getElementById('startBtn').addEventListener('click', function() {
+  var name = document.getElementById('studentName').value.trim();
+  var id = document.getElementById('studentID').value.trim();
+  var errorMsg = document.getElementById('errorMsg');
+
+  if (!name || !id) {
+    errorMsg.classList.add('show');
+    return;
+  }
+
+  errorMsg.classList.remove('show');
+  studentName = name;
+  studentID = id;
+
+  // Show quiz, hide login
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('quizPage').style.display = 'block';
+
+  // Show student info
+  document.getElementById('displayName').textContent = name;
+  document.getElementById('displayID').textContent = id;
+
+  // Render questions
+  renderQuestions();
+});
+
+// ============================================================
+// RENDER QUESTIONS
+// ============================================================
+function renderQuestions() {
+  var container = document.getElementById('questionsContainer');
+  var html = '';
+
+  for (var i = 0; i < quizData.length; i++) {
+    var q = quizData[i];
+    html += '<div class="question" id="q' + i + '">';
+    html += '<div class="question-text">' + (i + 1) + '. ' + q.question + '</div>';
+
+    for (var j = 0; j < q.options.length; j++) {
+      var letter = String.fromCharCode(65 + j);
+      html += '<label class="option" id="opt-' + i + '-' + j + '">';
+      html += '<input type="radio" name="q' + i + '" value="' + j + '" data-qindex="' + i + '" data-optindex="' + j + '">';
+      html += letter + ') ' + q.options[j];
+      html += '</label>';
+    }
+
+    html += '<div class="answer-feedback" id="feedback' + i + '"></div>';
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+
+  // Attach change listeners to all radio buttons
+  var radios = container.querySelectorAll('input[type="radio"]');
+  for (var k = 0; k < radios.length; k++) {
+    radios[k].addEventListener('change', function() {
+      var qIndex = parseInt(this.getAttribute('data-qindex'));
+      var optIndex = parseInt(this.getAttribute('data-optindex'));
+      selectAnswer(qIndex, optIndex);
+    });
+  }
+}
+
+// ============================================================
+// SELECT ANSWER
+// ============================================================
+function selectAnswer(questionIndex, optionIndex) {
+  if (submitted) return;
+  userAnswers[questionIndex] = optionIndex;
+
+  var options = document.querySelectorAll('#q' + questionIndex + ' .option');
+  for (var i = 0; i < options.length; i++) {
+    if (i === optionIndex) {
+      options[i].classList.add('selected');
+    } else {
+      options[i].classList.remove('selected');
+    }
+  }
+}
+
+// ============================================================
+// SUBMIT ANSWERS
+// ============================================================
+document.getElementById('submitBtn').addEventListener('click', function() {
+  // Check if all questions answered
+  var unanswered = 0;
+  for (var i = 0; i < userAnswers.length; i++) {
+    if (userAnswers[i] === null) unanswered++;
+  }
+
+  if (unanswered > 0) {
+    if (!confirm('You have ' + unanswered + ' unanswered question(s). Do you want to submit anyway?')) {
+      return;
+    }
+  }
+
+  submitted = true;
+  finalScore = 0;
+
+  for (var i = 0; i < quizData.length; i++) {
+    var q = quizData[i];
+    var questionDiv = document.getElementById('q' + i);
+    var feedback = document.getElementById('feedback' + i);
+    var options = document.querySelectorAll('#q' + i + ' .option');
+    var userAnswer = userAnswers[i];
+    var correctAnswer = q.answer;
+
+    // Remove selection highlight
+    for (var j = 0; j < options.length; j++) {
+      options[j].classList.remove('selected');
+    }
+
+    // Mark correct answer
+    options[correctAnswer].classList.add('correct-answer');
+
+    if (userAnswer === correctAnswer) {
+      finalScore++;
+      questionDiv.classList.add('correct');
+      feedback.className = 'answer-feedback show correct';
+      feedback.textContent = '✅ Correct!';
+    } else {
+      questionDiv.classList.add('incorrect');
+      if (userAnswer !== null) {
+        options[userAnswer].classList.add('wrong-answer');
+        feedback.className = 'answer-feedback show incorrect';
+        feedback.textContent = '❌ Incorrect. The correct answer is ' + String.fromCharCode(65 + correctAnswer) + '.';
+      } else {
+        feedback.className = 'answer-feedback show incorrect';
+        feedback.textContent = '⚠️ Not answered. The correct answer is ' + String.fromCharCode(65 + correctAnswer) + '.';
+      }
+    }
+
+    // Disable all inputs
+    for (var m = 0; m < options.length; m++) {
+      options[m].querySelector('input').disabled = true;
+      options[m].style.cursor = 'default';
+    }
+  }
+
+  // Show score
+  document.getElementById('scoreNumber').textContent = finalScore;
+  document.getElementById('scoreDisplay').classList.add('show');
+
+  // Show download and reset buttons, hide submit
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('downloadBtn').classList.add('show');
+  document.getElementById('resetBtn').classList.add('show');
+
+  // Scroll to score
+  document.getElementById('scoreDisplay').scrollIntoView({ behavior: 'smooth' });
+});
+
+// ============================================================
+// DOWNLOAD RESULTS
+// ============================================================
+document.getElementById('downloadBtn').addEventListener('click', function() {
+  var content = '';
+  content += '========================================\n';
+  content += '   LASKAR PELANGI - PRE-LESSON TASK\n';
+  content += '========================================\n\n';
+  content += 'Name: ' + studentName + '\n';
+  content += 'Student ID: ' + studentID + '\n';
+  content += 'Date: ' + new Date().toLocaleString() + '\n';
+  content += 'Score: ' + finalScore + ' / ' + quizData.length + '\n\n';
+  content += '========================================\n';
+  content += '   DETAILED ANSWERS\n';
+  content += '========================================\n\n';
+
+  for (var i = 0; i < quizData.length; i++) {
+    var q = quizData[i];
+    var userAnswer = userAnswers[i];
+    var correctAnswer = q.answer;
+    var userLetter = userAnswer !== null ? String.fromCharCode(65 + userAnswer) : 'Not answered';
+    var correctLetter = String.fromCharCode(65 + correctAnswer);
+    var isCorrect = userAnswer === correctAnswer;
+
+    content += (i + 1) + '. ' + q.question + '\n';
+    for (var j = 0; j < q.options.length; j++) {
+      var letter = String.fromCharCode(65 + j);
+      var marker = '   ';
+      if (j === correctAnswer) marker = ' ✓ ';
+      if (j === userAnswer && !isCorrect) marker = ' ✗ ';
+      content += marker + letter + ') ' + q.options[j] + '\n';
+    }
+    content += '   Your Answer: ' + userLetter + '\n';
+    content += '   Correct Answer: ' + correctLetter + '\n';
+    content += '   Result: ' + (isCorrect ? 'CORRECT' : 'INCORRECT') + '\n\n';
+  }
+
+  content += '========================================\n';
+  content += '   END OF RESULTS\n';
+  content += '========================================\n';
+
+  var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'LaskarPelangi_' + studentName.replace(/\s+/g, '_') + '_' + studentID + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+// ============================================================
+// RESET QUIZ
+// ============================================================
+document.getElementById('resetBtn').addEventListener('click', function() {
+  if (!confirm('Are you sure you want to try again? All your answers will be cleared.')) {
+    return;
+  }
+
+  submitted = false;
+  userAnswers = new Array(quizData.length).fill(null);
+  finalScore = 0;
+
+  // Reset UI
+  document.getElementById('submitBtn').style.display = 'block';
+  document.getElementById('downloadBtn').classList.remove('show');
+  document.getElementById('resetBtn').classList.remove('show');
+  document.getElementById('scoreDisplay').classList.remove('show');
+
+  // Go back to login page
+  document.getElementById('quizPage').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('studentName').value = '';
+  document.getElementById('studentID').value = '';
+  document.getElementById('errorMsg').classList.remove('show');
+});
+</script>
+
+</body>
+</html>
